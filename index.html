@@ -352,8 +352,8 @@ function getPrev(dr) {
   var pe = new Date(s); pe.setDate(pe.getDate()-1);
   return {since:ps.toISOString().split('T')[0], until:pe.toISOString().split('T')[0]};
 }
-function fM(v){if(!v&&v!==0)return'—';var n=parseFloat(v);return n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1000?'$'+(n/1e3).toFixed(0)+'K':'$'+n.toFixed(0);}
-function fK(v){if(!v&&v!==0)return'—';var n=parseFloat(v);return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':''+Math.round(n);}
+function fM(v){if(!v&&v!==0)return'—';var n=parseFloat(v);return'$'+Math.round(n).toLocaleString('es-CO');}
+function fK(v){if(!v&&v!==0)return'—';return Math.round(parseFloat(v)).toLocaleString('es-CO');}
 function fPct(v){if(!v&&v!==0)return'—';return parseFloat(v).toFixed(2)+'%';}
 function fN(v){if(!v&&v!==0)return'—';return Math.round(parseFloat(v)).toLocaleString('es-CO');}
 function getLeads(actions) {
