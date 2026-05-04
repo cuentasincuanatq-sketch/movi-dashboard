@@ -35,7 +35,7 @@ body{font-family:"Sora",sans-serif;background:var(--bg);color:var(--ink);font-si
 .btn-refresh{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:var(--r-sm);padding:6px 12px;font-family:"Sora",sans-serif;font-size:11px;font-weight:600;cursor:pointer;}
 .filter-bar{background:var(--card);border-bottom:1px solid var(--line);padding:10px 2rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:64px;z-index:99;}
 .filter-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);}
-.filter-select,.filter-input{font-family:"Sora",sans-serif;font-size:12px;padding:5px 10px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--line2);color:var(--ink);cursor:pointer;outline:none;-webkit-appearance:auto;appearance:auto;}.filter-select option{color:var(--ink);background:#fff;}
+.filter-select,.filter-input{font-family:"Sora",sans-serif;font-size:12px;padding:5px 10px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--line2);color:var(--ink);cursor:pointer;outline:none;-webkit-appearance:auto;appearance:auto;min-width:120px;}.filter-select option{color:var(--ink);background:#fff;}
 .filter-select:focus,.filter-input:focus{border-color:var(--c2);}
 .filter-date-range{display:flex;align-items:center;gap:6px;}
 .filter-date-range span{font-size:11px;color:var(--ink3);}
@@ -384,7 +384,7 @@ function loadAll() {
   var ins = 'spend,impressions,reach,clicks,ctr,cpm,cpc,frequency,actions';
 
   // Step 1: Campaigns
-  apiCall('campaigns', {fields:'id,name,status,objective,insights{spend,impressions,reach,clicks,ctr,cpm,cpc,frequency,actions}', time_range:tf, limit:100}, function(err, d) {
+  apiCall('campaigns', {fields:'id,name,status,objective,insights.time_range('+tf+'){spend,impressions,reach,clicks,ctr,cpm,cpc,frequency,actions}', limit:100}, function(err, d) {
     if (err) { hideLoad(); showErr(err.message); return; }
     S.campaigns = (d.data||[]).map(function(c) {
       var i=(c.insights&&c.insights.data&&c.insights.data[0])||{};
@@ -404,7 +404,7 @@ function loadAll() {
 
     showLoad('Cargando conjuntos de anuncios...','');
     // Step 2: Adsets
-    apiCall('adsets', {fields:'id,name,status,campaign{name},insights{'+ins+'}', time_range:tf, limit:200}, function(err, d) {
+    apiCall('adsets', {fields:'id,name,status,campaign{name},insights.time_range('+tf+'){'+ins+'}', limit:200}, function(err, d) {
       if (err) { hideLoad(); showErr(err.message); return; }
       S.adsets=(d.data||[]).map(function(a){
         var i=(a.insights&&a.insights.data&&a.insights.data[0])||{};
@@ -418,7 +418,7 @@ function loadAll() {
 
       showLoad('Cargando anuncios...','');
       // Step 3: Ads
-      apiCall('ads', {fields:'id,name,status,adset{name},insights{'+ins+'}', breakdowns:'publisher_platform', time_range:tf, limit:200}, function(err, d) {
+      apiCall('ads', {fields:'id,name,status,adset{name},insights.time_range('+tf+'){'+ins+'}', breakdowns:'publisher_platform', limit:200}, function(err, d) {
         if (err) { hideLoad(); showErr(err.message); return; }
         S.ads=(d.data||[]).map(function(a){
           var i=(a.insights&&a.insights.data&&a.insights.data[0])||{};
